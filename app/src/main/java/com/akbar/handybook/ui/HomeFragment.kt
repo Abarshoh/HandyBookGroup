@@ -40,7 +40,18 @@ class HomeFragment : Fragment() {
         binding.allbooksrecyle.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
-        adapter = BooksAdapter(listOf(), requireContext())
+        adapter = BooksAdapter(listOf(), requireContext(), object : BooksAdapter.OnClickBook {
+            override fun onClickRoman(book: Book) {
+                var bundle = Bundle()
+                var details = DetailsFragment()
+                bundle.putSerializable("book", book)
+                details.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.main, details)
+                    .commit()
+            }
+
+        })
         binding.allbooksrecyle.adapter = adapter
 
         api.getMainBook().enqueue(object : Callback<Book>{
