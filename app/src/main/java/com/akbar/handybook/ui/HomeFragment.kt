@@ -7,11 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import com.akbar.handybook.R
 import com.akbar.handybook.adapters.BooksAdapter
@@ -44,7 +41,7 @@ class HomeFragment : Fragment() {
             override fun onClickRoman(book: Book) {
                 var bundle = Bundle()
                 var details = DetailsFragment()
-                bundle.putSerializable("book", book)
+                bundle.putInt("book", book.id)
                 details.arguments = bundle
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.main, details)
@@ -131,7 +128,7 @@ class HomeFragment : Fragment() {
                             AllBooks(allBooks)
                             return
                         }
-                        setCategoryChanger(category)
+                        AlterCategory(category)
                     }
                 })
             }
@@ -149,7 +146,7 @@ class HomeFragment : Fragment() {
 
 
 
-    private fun setCategoryChanger(category: String) {
+    private fun AlterCategory(category: String) {
         api.getBooksByCategory(category).enqueue(object : Callback<List<Book>>{
             override fun onResponse(call: Call<List<Book>>, response: Response<List<Book>>) {
                 if (!response.isSuccessful) return
@@ -172,7 +169,11 @@ class HomeFragment : Fragment() {
     private fun AllBooks(books: List<Book>) {
         adapter.list = books
         adapter.notifyDataSetChanged()
-//        binding.homeNothingFound.visibility = if (books.isEmpty()) View.VISIBLE else View.GONE
+        if (books.isEmpty()){
+            binding.nothing.visibility = View.VISIBLE}
+        else{
+            binding.nothing.visibility = View.GONE}
+
     }
 
 

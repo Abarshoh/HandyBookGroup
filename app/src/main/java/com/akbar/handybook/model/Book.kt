@@ -1,8 +1,6 @@
 package com.akbar.handybook.model
-
-import java.io.Serializable
-
 data class Book(
+    val audio: String,
     val author: String,
     val count_page: Int,
     val description: String,
@@ -16,4 +14,4 @@ data class Book(
     val status: Int,
     val type_id: Int,
     val year: String
-): Serializable
+)

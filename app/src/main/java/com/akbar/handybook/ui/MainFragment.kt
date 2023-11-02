@@ -41,6 +41,11 @@ class MainFragment : Fragment() {
             .add(R.id.container, HomeFragment())
             .commit()
 
+        binding.person.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, ShaxsiyKabinetFragment())
+                .commit()
+        }
 
         return binding.root
     }
