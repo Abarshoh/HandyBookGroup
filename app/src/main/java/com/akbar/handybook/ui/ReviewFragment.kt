@@ -1,18 +1,24 @@
 package com.akbar.handybook.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.akbar.handybook.databinding.FragmentOqilayotganBinding
+import com.akbar.handybook.databinding.FragmentReviewBinding
 import com.akbar.handybook.databinding.FragmentShaxsiyKabinetBinding
+import com.akbar.handybook.model.Book
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+/**
+ * A simple [Fragment] subclass.
+ * Use the [ReviewFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
-class ShaxsiyKabinetFragment : Fragment() {
+class ReviewFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -29,32 +35,16 @@ class ShaxsiyKabinetFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val binding= FragmentReviewBinding.inflate(inflater, container, false)
 
-        val binding= FragmentShaxsiyKabinetBinding.inflate(inflater,container,false)
-
-
-//      var  user = arguments?.getSerializable("user") as User
-//        var userList = ShPHelper.getInstance(requireContext()).getUser()
-//        img = binding.imageView3
-//        for (i in userList) {
-//            if (i == user) {
-//                if (i.url != null) {
-//                    img.setImageURI(Uri.parse(i.url))
-//                }
-//                else{
-//                    img.setImageResource(R.drawable.user)
-//                }
-//            }
-//        }
-//        binding.username.text = user.name + " " + user.surname
-//        binding.gmail.text = user.email
-//        binding.back.setOnClickListener {
-//            requireActivity().onBackPressed()
-//        }
-//
-
-
-    return binding.root
+        var  book = arguments?.getSerializable("book") as Book
+        binding.bookName.text=book.name+" romani sizga qanchalik manzur keldi?"
+        binding.back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+        var rating = binding.ratingBar.rating.toString()
+        Log.d("rating", rating)
+        return binding.root
     }
 
     companion object {
@@ -64,12 +54,12 @@ class ShaxsiyKabinetFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ShaxsiyKabinetFragment.
+         * @return A new instance of fragment OqilayotganFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ShaxsiyKabinetFragment().apply {
+            ReviewFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
