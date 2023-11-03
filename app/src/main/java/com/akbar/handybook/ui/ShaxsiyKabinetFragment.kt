@@ -30,7 +30,7 @@ class ShaxsiyKabinetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding= FragmentShaxsiyKabinetBinding.inflate(inflater,container,false)\
+        val binding= FragmentShaxsiyKabinetBinding.inflate(inflater,container,false)
 
 
 //      var  user = arguments?.getSerializable("user") as User

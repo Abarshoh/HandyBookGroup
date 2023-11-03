@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         adapter = BooksAdapter(listOf(), requireContext(), object : BooksAdapter.OnClickBook {
             override fun onClickRoman(book: Book) {
                 var bundle = Bundle()
-                var details = DetailsFragment()
+                var details = ReviewFragment()
                 bundle.putSerializable("book", book)
                 details.arguments = bundle
                 parentFragmentManager.beginTransaction()
