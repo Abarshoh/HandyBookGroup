@@ -6,10 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.akbar.handybook.R
 import com.akbar.handybook.databinding.FragmentOqilayotganBinding
 import com.akbar.handybook.databinding.FragmentReviewBinding
 import com.akbar.handybook.databinding.FragmentShaxsiyKabinetBinding
 import com.akbar.handybook.model.Book
+import com.akbar.handybook.networking.APIClient
+import com.akbar.handybook.networking.APIService
+import org.jetbrains.annotations.ApiStatus
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import uz.itteacher.mybook.moedel.AddComment
+import uz.itteacher.mybook.moedel.Comment
 
 /**
  * A simple [Fragment] subclass.
@@ -42,8 +51,40 @@ class ReviewFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
-        var rating = binding.ratingBar.rating.toString()
-        Log.d("rating", rating)
+        var rating = binding.ratingBar.rating
+        if (rating.toString().toDouble()>3.0){
+            binding.emoji.setImageResource(R.drawable.book)
+        }
+        binding.send.setOnClickListener{
+            val c = AddComment(book_id = 2, user_id = 1, reyting = rating.toString().toDouble(), text = binding.review.text.toString())
+            val api = APIClient.getInstance().create(APIService::class.java)
+            api.addComment(c).enqueue(object : Callback<AddComment> {
+                override fun onResponse(call: Call<AddComment>, response: Response<AddComment>) {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.main,MainFragment())
+                        .commit()
+                }
+
+                override fun onFailure(call: Call<AddComment>, t: Throwable) {
+                    Log.d("failure", "onFailure: $t")
+                }
+            })
+            api.getBookComment(1).enqueue(object :Callback<List<Comment>>{
+                override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
+                    Log.d("comment", response.toString())
+                }
+
+                override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
+                    Log.d("Asdf", "onFailure: $t")
+                }
+
+                    })
+        }
+        binding.send.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main,MainFragment())
+                .commit()
+        }
         return binding.root
     }
 
