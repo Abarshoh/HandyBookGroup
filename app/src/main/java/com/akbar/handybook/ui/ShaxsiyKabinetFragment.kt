@@ -56,7 +56,10 @@ class ShaxsiyKabinetFragment : Fragment() {
 
         binding.back.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, HomeFragment())
+                .replace(R.id.main, MainFragment())
+                .commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, HomeFragment())
                 .commit()
         }
         api.getAllBooks().enqueue(object : Callback<List<Book>>{
