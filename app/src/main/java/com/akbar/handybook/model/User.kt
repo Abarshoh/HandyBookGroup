@@ -1,6 +1,6 @@
 package com.example.app_01_project.enter
 
-data class f(
+data class User(
     val access_token: String,
     val fullname: String,
     val id: Int,

@@ -1,11 +1,13 @@
 package com.akbar.handybook.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.akbar.handybook.MyShared
 import com.akbar.handybook.R
 import com.akbar.handybook.databinding.FragmentOqilayotganBinding
 import com.akbar.handybook.databinding.FragmentReviewBinding
@@ -31,6 +33,7 @@ class ReviewFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var book: Book
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,56 +49,77 @@ class ReviewFragment : Fragment() {
     ): View? {
         val binding= FragmentReviewBinding.inflate(inflater, container, false)
         val api = APIClient.getInstance().create(APIService::class.java)
+        val shared = MyShared.getInstance(requireContext())
+        val user = shared.getUser()
 
         api.getBookById(param1.toString().toInt()).enqueue(object:Callback<Book>{
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<Book>, response: Response<Book>) {
-               if (response.isSuccessful){}
+               if (response.isSuccessful && response.body() != null){
+                   var item = response.body()!!
+                   if (item.audio == null){
+                       book = Book("item.audio",item.author, item.count_page, item.description, item.file, item.id, item.image, item.lang, item.name, item.publisher, item.reyting, item.status, item.type_id, item.year)
+                       binding.bookName.text = book.name + " romani sizga qanchalik manzur keldi?"
+                       binding.back.setOnClickListener {
+                           parentFragmentManager.beginTransaction()
+                               .replace(R.id.main, CommentsFragment())
+                               .commit()
+                       }
+                       var rating = binding.ratingBar.rating
+                       if (rating.toString().toDouble()>3.0){
+                           binding.emoji.setImageResource(R.drawable.book)
+                       }
+                       binding.send.setOnClickListener {
+                           var c = AddComment(book.id, reyting = rating.toDouble(), text = binding.review.text.toString(), user_id = user!!.id)
+                           api.addComment(c).enqueue(object : Callback<AddComment>{
+                               override fun onResponse(call: Call<AddComment>, response: Response<AddComment>) {
+                                   parentFragmentManager.beginTransaction()
+                                       .replace(R.id.main, MainFragment())
+                                       .commit()
+                               }
+
+                               override fun onFailure(call: Call<AddComment>, t: Throwable) {
+                                   Log.d("TAG", "onFailure: $")
+                               }
+                           })
+                       }
+                   }
+                   else{
+                       book = Book(item.audio,item.author, item.count_page, item.description, item.file, item.id, item.image, item.lang, item.name, item.publisher, item.reyting, item.status, item.type_id, item.year)
+                       book = Book(item.audio,item.author, item.count_page, item.description, item.file, item.id, item.image, item.lang, item.name, item.publisher, item.reyting, item.status, item.type_id, item.year)
+                       binding.bookName.text = book.name + " romani sizga qanchalik manzur keldi?"
+                       binding.back.setOnClickListener {
+                           parentFragmentManager.beginTransaction()
+                               .replace(R.id.main, CommentsFragment())
+                               .commit()
+                       }
+                       var rating = binding.ratingBar.rating
+                       if (rating.toString().toDouble()>3.0){
+                           binding.emoji.setImageResource(R.drawable.book)
+                       }
+                       binding.send.setOnClickListener {
+                           var c = AddComment(book.id, reyting = rating.toDouble(), text = binding.review.text.toString(), user_id = user!!.id)
+                           api.addComment(c).enqueue(object : Callback<AddComment>{
+                               override fun onResponse(call: Call<AddComment>, response: Response<AddComment>) {
+                                   parentFragmentManager.beginTransaction()
+                                       .replace(R.id.main, MainFragment())
+                                       .commit()
+                               }
+
+                               override fun onFailure(call: Call<AddComment>, t: Throwable) {
+                                   Log.d("TAG", "onFailure: $")
+                               }
+                           })
+                       }
+                   }
+               }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.d("TAG", "onFailure: $t")
             }
         })
-
-        var  book = arguments?.getSerializable("book") as Book
-        binding.bookName.text=book.name+" romani sizga qanchalik manzur keldi?"
-        binding.back.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        var rating = binding.ratingBar.rating
-        if (rating.toString().toDouble()>3.0){
-            binding.emoji.setImageResource(R.drawable.book)
-        }
-        binding.send.setOnClickListener{
-            val c = AddComment(book_id = 2, user_id = 1, reyting = rating.toString().toDouble(), text = binding.review.text.toString())
-            val api = APIClient.getInstance().create(APIService::class.java)
-            api.addComment(c).enqueue(object : Callback<AddComment> {
-                override fun onResponse(call: Call<AddComment>, response: Response<AddComment>) {
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.main,MainFragment())
-                        .commit()
-                }
-
-                override fun onFailure(call: Call<AddComment>, t: Throwable) {
-                    Log.d("failure", "onFailure: $t")
-                }
-            })
-            api.getBookComment(1).enqueue(object :Callback<List<Comment>>{
-                override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                    Log.d("comment", response.toString())
-                }
-
-                override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                    Log.d("Asdf", "onFailure: $t")
-                }
-
-            })
-        }
-        binding.send.setOnClickListener{
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main,MainFragment())
-                .commit()
-        }
+        
         return binding.root
     }
 

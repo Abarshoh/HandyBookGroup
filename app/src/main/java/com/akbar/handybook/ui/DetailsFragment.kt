@@ -72,6 +72,12 @@ class DetailsFragment : Fragment() {
                 .commit()
         }
 
+        binding.read.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, PDFViewerFragment.newInstance(id.toString(),""))
+                .commit()
+        }
+
         return binding.root
     }
 
@@ -85,11 +91,11 @@ class DetailsFragment : Fragment() {
                     .commit()
             }
             1->{
-//                var audiobook = AudioBookFragment()
-//                audiobook.arguments = bundle
-//                parentFragmentManager.beginTransaction()
-//                    .replace(R.id.frame_container, audiobook)
-//                    .commit()
+                var audiobook = AudioBookFragment()
+                audiobook.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, audiobook)
+                    .commit()
             }
         }
     }

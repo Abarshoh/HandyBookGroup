@@ -14,7 +14,7 @@ import com.akbar.handybook.databinding.FragmentLoginBinding
 import com.akbar.handybook.networking.APIClient
 import com.akbar.handybook.networking.APIService
 import com.example.app_01_project.enter.Login
-import com.example.app_01_project.enter.f
+import com.example.app_01_project.enter.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,8 +58,8 @@ class LoginFragment : Fragment() {
             var username_layout_item=binding.usernameEdittextId.text
             var password_layout_item=binding.passwordEdittextId.text
             val l= Login(username_layout_item.toString(),password_layout_item.toString())
-            api.login(l).enqueue(object : Callback<f>{
-                override fun onResponse(call: Call<f>, response: Response<f>) {
+            api.login(l).enqueue(object : Callback<User>{
+                override fun onResponse(call: Call<User>, response: Response<User>) {
                     if(response.isSuccessful && response.body()!=null){
                         val shared = MyShared.getInstance(requireContext())
                         val user = response.body()!!
@@ -69,7 +69,7 @@ class LoginFragment : Fragment() {
                             .commit()
                     }
                 }
-                override fun onFailure(call: Call<f>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.d(ContentValues.TAG, "onFailure: $t")
                 }
             })

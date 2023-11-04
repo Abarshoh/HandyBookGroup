@@ -2,7 +2,7 @@ package com.akbar.handybook
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.app_01_project.enter.f
+import com.example.app_01_project.enter.User
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -21,7 +21,7 @@ class MyShared private constructor(context: Context){
         }
     }
 
-    fun setUser(user: f){
+    fun setUser(user: User){
         val data  = gson.toJson(user)
         edit.putString("user", data).apply()
     }
@@ -29,10 +29,10 @@ class MyShared private constructor(context: Context){
     fun logOut(){
         edit.putString("user", "").apply()
     }
-    fun getUser():f?{
+    fun getUser():User?{
         val data = shared.getString("user", "")
         if (data == "") return null
-        val typeToken = object : TypeToken<f>() {}.type
+        val typeToken = object : TypeToken<User>() {}.type
         return gson.fromJson(data, typeToken)
     }
 

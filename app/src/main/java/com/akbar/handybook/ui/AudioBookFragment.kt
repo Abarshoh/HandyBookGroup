@@ -1,5 +1,7 @@
 package com.akbar.handybook.ui
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,8 +19,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.akbar.handybook.model.Book
 import com.akbar.handybook.R
-import android.media.MediaPlayer
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +55,7 @@ class AudioBookFragment : Fragment() {
         val api = APIClient.getInstance().create(APIService::class.java)
 
         api.getBookById(id).enqueue(object : Callback<Book> {
+            @RequiresApi(34)
             override fun onResponse(call: Call<Book>, response: Response<Book>) {
                 if (response.isSuccessful && response.body() != null){
                     val item = response.body()!!
@@ -73,9 +76,7 @@ class AudioBookFragment : Fragment() {
                         binding.rating.text = book.reyting.toString()
                         binding.author.text = book.author
 
-                        val mp = MediaPlayer(requireContext())
-                        mp.setDataSource(book.audio)
-                        mp.start()
+                        val mp = MediaPlayer.create(requireContext(), Uri.parse(book.audio))
 
                         binding.seekbar.progress = 0
                         binding.seekbar.max = mp.duration
@@ -93,12 +94,10 @@ class AudioBookFragment : Fragment() {
                         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
                             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                                 if (mp!= null && fromUser){
-//                    mp.seekTo(progress)
+                                    mp.seekTo(progress)
                                     Log.d("TAG", progress.toString())
                                 }
                             }
-
-
 
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {
                                 TODO("Not yet implemented")
