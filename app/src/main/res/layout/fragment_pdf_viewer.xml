@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.PDFViewerFragment">
 
-    <com.github.barteksc.pdfviewer.PDFView
+    <WebView
         android:id="@+id/pdf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

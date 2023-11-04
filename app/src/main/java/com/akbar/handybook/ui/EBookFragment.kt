@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import coil.load
+import com.akbar.handybook.R
 import com.akbar.handybook.adapters.ViewPagerAdapter
 import com.akbar.handybook.databinding.FragmentEBookBinding
 import com.akbar.handybook.model.Book
@@ -68,6 +69,12 @@ class EBookFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout2, binding.viewPager){ tab, position ->
             tab.text = list[position]
         }.attach()
+
+        binding.read.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, PDFViewerFragment.newInstance(id.toString(),""))
+                .commit()
+        }
 
         return binding.root
     }

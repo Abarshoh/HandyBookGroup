@@ -80,7 +80,6 @@
                     android:background="@drawable/circle2" />
 
                 <ImageView
-                    android:id="@+id/mainbookimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -88,6 +87,7 @@
             </FrameLayout>
 
             <ImageView
+                android:id="@+id/mainbookimage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"

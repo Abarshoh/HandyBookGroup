@@ -72,11 +72,7 @@ class DetailsFragment : Fragment() {
                 .commit()
         }
 
-        binding.read.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, PDFViewerFragment.newInstance(id.toString(),""))
-                .commit()
-        }
+
 
         return binding.root
     }
